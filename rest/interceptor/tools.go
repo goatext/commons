@@ -18,7 +18,7 @@ func returnErrorToCustomer(w http.ResponseWriter, errorDTO ErrorDTO) {
 }
 
 // Strips 'Bearer ' prefix from bearer token string
-func stripBearerPrefixFromTokenString(tok string) (string, error) {
+func StripBearerPrefixFromTokenString(tok string) (string, error) {
 	// Should be a bearer token
 	if len(tok) > 6 && strings.ToUpper(tok[0:7]) == "BEARER " {
 		return tok[7:], nil
@@ -26,7 +26,7 @@ func stripBearerPrefixFromTokenString(tok string) (string, error) {
 	return tok, nil
 }
 
-func getRequesterIp(r *http.Request) string {
+func GetRequesterIp(r *http.Request) string {
 
 	if r.Header.Get("Cf-Connecting-Ip") != "" {
 		return strings.Split(r.Header.Get("Cf-Connecting-Ip"), ":")[0]
