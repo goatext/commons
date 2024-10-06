@@ -1,0 +1,33 @@
+package database
+
+import (
+	"database/sql"
+	"errors"
+
+	"github.com/goatext/commons-go/log"
+)
+
+const ErrorNoRowsAffected string = "ERROR_SQL_NO_ROWS_AFFECTED"
+
+// Manages the possible error coming for an update execution and returns the database error if exists.
+// If not, it checks if any row has been affected and returns err if nothing has been updated.
+//
+//	  params
+//
+//		'callerName' is the name of the caller function, it is used in log message
+//		'result' is the sql.Result returned by Exec function
+//		'err' is the error returned by Exec function
+func ManageUpdateError(callerName string, result sql.Result, err error) error {
+	if err != nil {
+		serr := GetSqlError(err)
+		log.Errorf("%s: Error persisting information at DB. %+v", callerName, serr)
+		return serr
+	}
+
+	if kk, _ := result.RowsAffected(); kk == 0 {
+		log.Errorf("%s: Nothing updated at database.", callerName)
+		return errors.New(ErrorNoRowsAffected)
+	}
+
+	return nil
+}
