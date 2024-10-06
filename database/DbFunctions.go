@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/goatext/commons-go/log"
+	"github.com/goatext/commons/log"
 )
 
 const ErrorNoRowsAffected string = "ERROR_SQL_NO_ROWS_AFFECTED"

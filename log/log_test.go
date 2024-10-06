@@ -3,7 +3,7 @@ package log_test
 import (
 	"testing"
 
-	"github.com/goatext/commons-go/log"
+	"github.com/goatext/commons/log"
 )
 
 func TestDebug(t *testing.T) {

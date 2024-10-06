@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/goatext/commons-go/types"
+	"github.com/goatext/commons/types"
 )
 
 func TestNew(t *testing.T) {

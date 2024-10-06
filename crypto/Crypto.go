@@ -17,7 +17,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/goatext/commons-go/log"
+	"github.com/goatext/commons/log"
 	"golang.org/x/crypto/pbkdf2"
 )
 

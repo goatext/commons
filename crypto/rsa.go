@@ -9,7 +9,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/goatext/commons-go/log"
+	"github.com/goatext/commons/log"
 )
 
 var (

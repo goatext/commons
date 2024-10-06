@@ -4,8 +4,8 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/goatext/commons-go/decoder"
-	"github.com/goatext/commons-go/log"
+	"github.com/goatext/commons/decoder"
+	"github.com/goatext/commons/log"
 )
 
 func DecodeRequestIntoStruct(w http.ResponseWriter, r *http.Request, dest interface{}) error {

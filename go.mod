@@ -1,4 +1,4 @@
-module github.com/goatext/commons-go
+module github.com/goatext/commons
 
 go 1.22.4
 

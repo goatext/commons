@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	utils "github.com/goatext/commons-go/crypto"
+	utils "github.com/goatext/commons/crypto"
 )
 
 func TestGenerateCryptoRSA(t *testing.T) {

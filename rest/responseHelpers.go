@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/go-http-utils/headers"
-	"github.com/goatext/commons-go/errors"
-	"github.com/goatext/commons-go/log"
+	"github.com/goatext/commons/errors"
+	"github.com/goatext/commons/log"
 )
 
 type ErrorDTO struct {

@@ -6,8 +6,8 @@ import (
 	"fmt"
 
 	"github.com/go-sql-driver/mysql"
-	"github.com/goatext/commons-go/errors"
-	"github.com/goatext/commons-go/log"
+	"github.com/goatext/commons/errors"
+	"github.com/goatext/commons/log"
 )
 
 const (
