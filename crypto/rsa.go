@@ -1,21 +1,23 @@
 package crypto
 
 import (
+	"bytes"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
 	"crypto/x509"
 	"encoding/pem"
-	"errors"
 	"os"
 
+	"github.com/goatext/commons/errors"
 	"github.com/goatext/commons/log"
+	"github.com/goatext/commons/pointer"
 )
 
 var (
-	ErrKeyMustBePEMEncoded = errors.New("invalid Key: Key must be a PEM encoded PKCS1 or PKCS8 key")
-	ErrNotRSAPrivateKey    = errors.New("key is not a valid RSA private key")
-	ErrNotRSAPublicKey     = errors.New("key is not a valid RSA public key")
+	ErrKeyMustBePEMEncoded = errors.New(errors.ErrorGeneratingRsa, "invalid Key: Key must be a PEM encoded PKCS1 or PKCS8 key")
+	ErrNotRSAPrivateKey    = errors.New(errors.ErrorGeneratingRsa, "key is not a valid RSA private key")
+	ErrNotRSAPublicKey     = errors.New(errors.ErrorGeneratingRsa, "key is not a valid RSA public key")
 )
 
 // RsaEncryptWithPublicKey encrypts data with public key
@@ -190,4 +192,37 @@ func RsaParsePublicKeyFromPEM(key []byte) (*rsa.PublicKey, error) {
 	}
 
 	return pkey, nil
+}
+
+func RSACreatePairToPemFiles() (*string, *string, error) {
+	// Generate a new RSA private key with 2048 bits
+	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
+	if err != nil {
+		log.Errorf("Error generating RSA private key: %+v", err)
+		return nil, nil, errors.New(errors.ErrorGeneratingRsa, "Error generating RSA private key")
+	}
+
+	// Encode the private key to the PEM format
+	privateKeyPEM := &pem.Block{
+		Type:  "RSA PRIVATE KEY",
+		Bytes: x509.MarshalPKCS1PrivateKey(privateKey),
+	}
+	privateKeyBuffer := bytes.NewBufferString("")
+	pem.Encode(privateKeyBuffer, privateKeyPEM)
+
+	// Extract the public key from the private key
+	publicKey := &privateKey.PublicKey
+
+	// Encode the public key to the PEM format
+	publicKeyPEM := &pem.Block{
+		Type:  "RSA PUBLIC KEY",
+		Bytes: x509.MarshalPKCS1PublicKey(publicKey),
+	}
+
+	publicKeyBuffer := bytes.NewBufferString("")
+	pem.Encode(publicKeyBuffer, publicKeyPEM)
+
+	log.Traceln("RSA key pair generated successfully!")
+
+	return pointer.String(privateKeyBuffer.String()), pointer.String(publicKeyBuffer.String()), nil
 }

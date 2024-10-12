@@ -2,12 +2,10 @@ package database
 
 import (
 	"database/sql"
-	"errors"
 
+	"github.com/goatext/commons/errors"
 	"github.com/goatext/commons/log"
 )
-
-const ErrorNoRowsAffected string = "ERROR_SQL_NO_ROWS_AFFECTED"
 
 // Manages the possible error coming for an update execution and returns the database error if exists.
 // If not, it checks if any row has been affected and returns err if nothing has been updated.
@@ -26,7 +24,7 @@ func ManageUpdateError(callerName string, result sql.Result, err error) error {
 
 	if kk, _ := result.RowsAffected(); kk == 0 {
 		log.Errorf("%s: Nothing updated at database.", callerName)
-		return errors.New(ErrorNoRowsAffected)
+		return errors.NewErrorNoRowsAffected("Nothing updated at database")
 	}
 
 	return nil

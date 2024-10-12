@@ -27,7 +27,7 @@ func ReturnError(w http.ResponseWriter, err error, httpStatus int) {
 
 	if err != nil {
 
-		if s, ok := err.(*errors.Web3Error); ok {
+		if s, ok := err.(*errors.CommonsError); ok {
 			w.Header().Add(headers.ContentType, "application/json")
 			errorDTO := NewErrorDTO(s.Code, s.Message)
 			w.WriteHeader(httpStatus)

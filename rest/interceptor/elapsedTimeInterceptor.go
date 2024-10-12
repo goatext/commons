@@ -1,6 +1,7 @@
 package interceptor
 
 import (
+	"context"
 	"encoding/base64"
 	"math"
 	"net"
@@ -18,6 +19,9 @@ type requestInfo struct {
 	url  string
 	hash string
 }
+type key int
+
+const requestIDKey key = 0
 
 var (
 	totalRequests         uint64
@@ -39,7 +43,8 @@ func NewElapsedTimeInterceptor() mux.MiddlewareFunc {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			startTime := float64(time.Now().UnixNano()) / float64(time.Millisecond)
 			idRequest, _ := crypto.GetDataHash(time.Now())
-
+			idRequestStr := base64.RawStdEncoding.EncodeToString(idRequest[:])
+			ctx := context.WithValue(r.Context(), requestIDKey, idRequestStr)
 			requestInfo := requestInfo{url: r.URL.Path, hash: base64.RawStdEncoding.EncodeToString(idRequest[:])}
 
 			if log.LogLevel == log.TRACE {
@@ -58,7 +63,7 @@ func NewElapsedTimeInterceptor() mux.MiddlewareFunc {
 				return
 			}
 
-			remoteAddress := getRequesterIp(r)
+			remoteAddress := GetRequesterIp(r)
 			ip, _, _ := net.SplitHostPort(remoteAddress)
 			log.Infof("**** %s - New Request Arrived: Requester ip is %s; Request info: [%s %s%s]", requestInfo.hash, ip, r.Method, r.Host, r.URL)
 
@@ -73,9 +78,16 @@ func NewElapsedTimeInterceptor() mux.MiddlewareFunc {
 				}
 			}()
 			r.Header.Add(HEADER_REMOTE_IP, ip)
-			next.ServeHTTP(w, r)
+			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
+}
+
+func GetRequestID(ctx context.Context) string {
+	if requestID, ok := ctx.Value(requestIDKey).(string); ok {
+		return requestID
+	}
+	return "UNKNOWN"
 }
 
 func memStats() {

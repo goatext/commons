@@ -25,7 +25,7 @@ func (config *ServiceConfig) JwtInterceptor(roleValidator RoleValidator, dbToken
 			return
 		}
 
-		token, err := stripBearerPrefixFromTokenString(r.Header.Get(AUTHORIZATION))
+		token, err := StripBearerPrefixFromTokenString(r.Header.Get(AUTHORIZATION))
 		if err != nil {
 			log.Errorf("Incorrect Authorization Bearer: {%s}. %+v", r.Header.Get(AUTHORIZATION), err)
 			w.WriteHeader(http.StatusUnauthorized)

@@ -10,11 +10,6 @@ import (
 	"github.com/goatext/commons/log"
 )
 
-const (
-	ErrorEmptySqlResult     string = "ERROR_EMPTY_SQL_RESULT"
-	ErrorDatabaseDuplicated string = "ERROR_DUPLICATED_ENTRY"
-)
-
 type DbPool struct {
 	pool *sql.DB
 }
@@ -88,13 +83,14 @@ func GetSqlError(err error) error {
 	merror, ok := err.(*mysql.MySQLError)
 	if !ok {
 		if err.Error() == "sql: no rows in result set" {
-			return errors.New(ErrorEmptySqlResult, "Empty sql result")
+
+			return errors.NewErrorEmptySqlResult("Empty sql result")
 		}
 		return errors.New("ERROR_DATABASE", err.Error())
 	}
 
 	if merror.Number == 1062 {
-		return errors.New(ErrorDatabaseDuplicated, "Duplicated entity")
+		return errors.NewErrorDatabaseDuplicated("Duplicated entity")
 	}
 
 	return err
