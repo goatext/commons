@@ -14,6 +14,12 @@ type DbPool struct {
 	pool *sql.DB
 }
 
+type Connection interface {
+	Exec(query string, args ...interface{}) (sql.Result, error)
+	Query(query string, args ...interface{}) (*sql.Rows, error)
+	QueryRow(query string, args ...interface{}) *sql.Row
+}
+
 // CreateDbPool creates the DB connections pool. time out must be in seconds
 func CreateDbPool(user, password, databaseName, host string, port, timeout uint16) (*DbPool, error) {
 	var err error
